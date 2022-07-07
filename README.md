@@ -6,7 +6,7 @@ Sandbox URL https://sandbox.momodeveloper.mtn.com
 ```
 from pay import PayClass
 
-callPay = PayClass.momopay(1,"ZMW", "The reference", "260968793843", "Payer message")
+callPay = PayClass.momopay(amount, currency, txt_ref, phone_number, payermessage)
 print(callPay["response"])
 ```
 Note: If it returns 202 or 200 then it means the request was successful
