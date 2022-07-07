@@ -45,5 +45,14 @@ from pay import PayClass
 checkcollectionsbalance = PayClass.momobalance()
   ```
   If the status is 200 or 202 it means the call was successful. After the call above it returns the account balance
- 
+  
+  ## Checking the account balance from the disbursement account
+  This function is used to check the account balance for the money inside the Disbursement wallet account. Here is how the API call is done:
+  ```
+  #Checking the disbursment balance
+  disbursementBalanceCheck = PayClass.momobalancedisbursement()
+  ```
+   If the status is 200 or 202 it means the call was successful. After the call above it returns the account balance
+  
+  
  
