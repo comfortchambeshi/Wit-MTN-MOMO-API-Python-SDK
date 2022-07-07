@@ -3,11 +3,11 @@ Production url https://proxy.momoapi.mtn.com
 Sandbox URL https://sandbox.momodeveloper.mtn.com
 
 #Requirements
-1 ### For production users 
+[^1]: 1 ### For production users 
   - MTN MOMO DEVELOPER ACCOUNT(https://momodeveloper.mtn.com/signin?ReturnUrl=%2F)
   - MTN MOMO COLLECTIONS SUBSCRIPTION KEY
   - MTN MOMO DEVELOPER DISBURSEMENT SUBSCRIPTION KEY
-2 ### For testing/Sandbox users
+[^1]: 2 ### For testing/Sandbox users
   - Basic authorizatio, which is generated with API user and API key
   
 
