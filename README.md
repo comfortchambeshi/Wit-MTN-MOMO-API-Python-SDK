@@ -9,6 +9,14 @@ from pay import PayClass
 callPay = PayClass.momopay(amount, currency, txt_ref, phone_number, payermessage)
 print(callPay["response"])
 ```
+To return the reference(UUID), print out this: 
+```
+print(callPay["ref"]) 
+```
+And to return the status code print out this:
+```
+print(callPay["response"])
+```
 Note: If it returns 202 or 200 then it means the request was successful
 
 ## Verify and check the transaction status
