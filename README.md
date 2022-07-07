@@ -37,4 +37,13 @@ When the transaction is successful it returns:
  For the complete reference of payment verification read on the bottom page from this link"
  https://momodeveloper.mtn.com/docs/services/collection/operations/requesttopay-referenceId-GET?
  
+ ## Checking the account balance from the collections account
+ This function is used to check the account balance for the money inside the collections wallet account. Here is how the API call is done:
+  ```
+from pay import PayClass
+#Checking the collections balance
+checkcollectionsbalance = PayClass.momobalance()
+  ```
+  If the status is 200 or 202 it means the call was successful. After the call above it returns the account balance
+ 
  
