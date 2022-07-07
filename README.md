@@ -84,3 +84,30 @@ withdrawmoney = PayClass.withdrawmtnmomo(amount, currency, txt_ref, phone_number
  ```
   
   
+# REFERENCES
+MTN DEVELOPER, (2019). /Token - Post. MOMO DEVELOPER PORTAL, Available: https://momodeveloper.mtn.com/docs/services/collection/operations/token-POST?, [ACCESSED: 7 july, 2022]
+
+MTN DEVELOPER, (2019). Request to pay. MOMO DEVELOPER PORTAL, Available: https://momodeveloper.mtn.com/docs/services/collection/operations/requesttopay-POST?, [ACCESSED: 7 july, 2022] 
+
+MTN DEVELOPER, (2019). /requesttopay/{referenceId} - GET. MOMO DEVELOPER PORTAL, Available: https://momodeveloper.mtn.com/docs/services/collection/operations/requesttopay-referenceId-GET?, [ACCESSED: 7 july, 2022] 
+
+MTN DEVELOPER, (2019). /v1_0/account/balance - GET. MOMO DEVELOPER PORTAL, Available: https://momodeveloper.mtn.com/docs/services/collection/operations/get-v1_0-account-balance?, [ACCESSED: 7 july, 2022] 
+
+MTN DEVELOPER, (2019). Disbursement token. MOMO DEVELOPER PORTAL, Available: https://momodeveloper.mtn.com/docs/services/disbursement/operations/token-POST?, [ACCESSED: 7 july, 2022]
+
+MTN DEVELOPER, (2019). /transfer - POST. MOMO DEVELOPER PORTAL, Available: https://momodeveloper.mtn.com/docs/services/disbursement/operations/transfer-POST?, [ACCESSED: 7 july, 2022]
+
+MTN DEVELOPER, (2019). /transfer/{referenceId} - GET. MOMO DEVELOPER PORTAL, Available: https://momodeveloper.mtn.com/docs/services/disbursement/operations/transfer-referenceId-GET?, [ACCESSED: 7 july, 2022]
+
+MTN DEVELOPER, (2019). /v1_0/account/balance - GET. MOMO DEVELOPER PORTAL, Available: https://momodeveloper.mtn.com/docs/services/disbursement/operations/get-v1_0-account-balance?, [ACCESSED: 7 july, 2022]
+
+
+
+
+
+
+
+
+
+
+ 
