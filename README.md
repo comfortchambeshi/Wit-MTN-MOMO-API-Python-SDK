@@ -2,12 +2,11 @@ Welcome to Wit MTN MOMO API Python SDK, here is the full tutorial on how to use 
 Production url https://proxy.momoapi.mtn.com
 Sandbox URL https://sandbox.momodeveloper.mtn.com
 
-#Requirements
-[^1]: 1 ### For production users 
+#Requirements for production users 
   - MTN MOMO DEVELOPER ACCOUNT(https://momodeveloper.mtn.com/signin?ReturnUrl=%2F)
   - MTN MOMO COLLECTIONS SUBSCRIPTION KEY
   - MTN MOMO DEVELOPER DISBURSEMENT SUBSCRIPTION KEY
-[^1]: 2 ### For testing/Sandbox users
+# Requirements For Sandbox/Testing users
   - Basic authorizatio, which is generated with API user and API key
   
 
