@@ -46,13 +46,41 @@ checkcollectionsbalance = PayClass.momobalance()
   ```
   If the status is 200 or 202 it means the call was successful. After the call above it returns the account balance
   
-  ## Checking the account balance from the disbursement account
+## Checking the account balance from the disbursement account
   This function is used to check the account balance for the money inside the Disbursement wallet account. Here is how the API call is done:
   ```
   #Checking the disbursment balance
   disbursementBalanceCheck = PayClass.momobalancedisbursement()
   ```
    If the status is 200 or 202 it means the call was successful. After the call above it returns the account balance
+   
+## Transfer money from MTN Disbursement wallet to an MTN mobile money account
+This function is used to transfer money from MTN disbursement account to an MTN mobile money account. Here is how it is done:
+
+ ```
+from pay import PayClass
+#Transfer money from disbursement account
+withdrawmoney = PayClass.withdrawmtnmomo(amount, currency, txt_ref, phone_number, payermessage)
+
+  ```
+  After a successful transfer it either returns 202 or 200
+  Note: To check the status print this 
+   ```
+  print(withdrawmoney["response"])
+  ```
+  To Check the transaction UUID(Reference)
+  Print this:
+  ```
+  print(withdrawmoney["ref"])
+  ```
+  
+    Note: The call withdrawmoney["ref"] returns a unique UUID(reference) which we will use in the next part
+
+## Checking withdraw status
+ This function is used to check the withdraw status after calling a withdraw function. Here is the code:
+ ```
+ from pay import PayClass
+ CheckWithdrawStatus = PayClass.checkwithdrawstatus("UUID reference returned from the transfer")
+ ```
   
   
- 
