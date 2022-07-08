@@ -2,45 +2,103 @@
 import requests
 import json
 import uuid
+from basicauth import encode
 
-#Momo token generation
-def  momotoken():
-   url = "https://sandbox.momodeveloper.mtn.com/collection/token/"
 
-   payload={}
-   headers = {
-     'Ocp-Apim-Subscription-Key': 'Your MTN MOMO SUBSCRIPTION KEY',
-     'Authorization': 'Basic _Your basic authorization_'
-   }
 
-   response = requests.request("POST", url, headers=headers, data=payload)
-
-   authorization_token = response.json()
-   return authorization_token
-
-#Momo disbursement token generation
-def  momotokendisbursement():
-   url = "https://sandbox.momodeveloper.mtn.com/disbursement/token/"
-
-   payload={}
-   headers = {
-     'Ocp-Apim-Subscription-Key': 'Your MTN MOMO DISBURSEMENT SUBSCRIPTION KEY',
-     'Authorization': 'Basic _Disbursement_basic_key_'
-   }
-
-   response = requests.request("POST", url, headers=headers, data=payload)
-
-   authorization_token = response.json()
-   return authorization_token
 
 
 class PayClass():
+    #Keys
+    #Collections Subscription Key:
+    collections_subkey = "{{Collections_your_subscription_key}}"
+    #Disbursement subscription key
+    disbursment_subkey = "{{Disbursement_your_subscription_key}}"
+    #Production collections basic authorisation key(Leave it blank if in sandbox mode)
+    basic_authorisation_collections = "Basic {{Your_basic_authorization_key}}"
+    #Production disbursement basic authorisation key(Leave it blank if in sandbox mode)
+    basic_authorisation_disbursment = ""
+    #Application mode
+    environment_mode = "sandbox"
+    accurl = "https://proxy.momoapi.mtn.com"
+    if environment_mode == "sandbox":
+        accurl = "https://sandbox.momodeveloper.mtn.com"
+    
+    #Generate Basic authorization key when it test mode
+    if environment_mode == "sandbox":
+      collections_apiuser = str(uuid.uuid4())
+      
+      #Create API user
+      url = ""+str(accurl)+"/v1_0/apiuser"
 
+      payload = json.dumps({
+        "providerCallbackHost": "URL of host ie google.com"
+      })
+      headers = {
+        'X-Reference-Id': collections_apiuser,
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': collections_subkey
+      }
+
+      response = requests.request("POST", url, headers=headers, data=payload)
+      
+      #Create API key
+      url = ""+str(accurl)+"/v1_0/apiuser/"+str(collections_apiuser)+"/apikey"
+
+      payload={}
+      headers = {
+        'Ocp-Apim-Subscription-Key': collections_subkey
+      }
+
+      response = requests.request("POST", url, headers=headers, data=payload)
+      print("The response is: \n"+str(response))
+      response = response.json()
+      api_key_collections = str(response["apiKey"])
+
+      #Create basic key for Collections
+      username, password = collections_apiuser, api_key_collections
+      basic_authorisation_collections = encoded_str = str(encode(username, password))
+      print(basic_authorisation_collections)
+
+      #API User
+      print("Api user:"+collections_apiuser+"\n")
+      print("Api Key:"+api_key_collections)
+
+
+    #Momo token generation
+    def  momotoken():
+          url = ""+str(PayClass.accurl)+"/collection/token/"
+
+          payload={}
+          headers = {
+            'Ocp-Apim-Subscription-Key': PayClass.collections_subkey,
+            'Authorization': str(PayClass.basic_authorisation_collections)
+          }
+
+          response = requests.request("POST", url, headers=headers, data=payload)
+
+          authorization_token = response.json()
+          return authorization_token
+
+    #Momo disbursement token generation
+    def  momotokendisbursement():
+          url = ""+str(PayClass.accurl)+"/disbursement/token/"
+
+          payload={}
+          headers = {
+            'Ocp-Apim-Subscription-Key': PayClass.disbursment_subkey,
+            'Authorization': 'Basic '+str(PayClass.basic_authorisation_disbursment)+''
+          }
+
+          response = requests.request("POST", url, headers=headers, data=payload)
+
+          authorization_token = response.json()
+          return authorization_token      
 
     def momopay(amount, currency, txt_ref, phone_number, payermessage):
         #UUID V4 generator
         uuidgen = str(uuid.uuid4())
-        url = "https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay"
+        url = ""+str(PayClass.accurl)+"/collection/v1_0/requesttopay"
 
         payload = json.dumps({
           "amount": amount,
@@ -55,10 +113,10 @@ class PayClass():
         })
         headers = {
   'X-Reference-Id': uuidgen,
-  'X-Target-Environment': 'sandbox',
-  'Ocp-Apim-Subscription-Key': 'Your MTN MOMO COLLECTIONS SUBSCRIPTION KEY',
+  'X-Target-Environment': PayClass.environment_mode,
+  'Ocp-Apim-Subscription-Key': PayClass.collections_subkey,
   'Content-Type': 'application/json',
-  'Authorization': "Bearer "+str(momotoken()["access_token"])
+  'Authorization': "Bearer "+str(PayClass.momotoken()["access_token"])
 }
 
         response = requests.request("POST", url, headers=headers, data=payload)
@@ -68,13 +126,13 @@ class PayClass():
         return context
 
     def verifymomo(txn):
-       url = "https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay/"+str(txn)+""
+       url = ""+str(PayClass.accurl)+"/collection/v1_0/requesttopay/"+str(txn)+""
 
        payload={}
        headers = {
-         'Ocp-Apim-Subscription-Key': 'Your MTN MOMO COLLECTIONS SUBSCRIPTION KEY',
-         'Authorization':  "Bearer "+str(momotoken()["access_token"]),
-           'X-Target-Environment': 'sandbox',
+         'Ocp-Apim-Subscription-Key': PayClass.collections_subkey,
+         'Authorization':  "Bearer "+str(PayClass.momotoken()["access_token"]),
+           'X-Target-Environment': PayClass.environment_mode,
        }
 
        response = requests.request("GET", url, headers=headers, data=payload)
@@ -85,13 +143,13 @@ class PayClass():
 
     #Check momo collections balance
     def momobalance():
-       url = "https://sandbox.momodeveloper.mtn.com/collection/v1_0/account/balance"
+       url = ""+str(PayClass.accurl)+"/collection/v1_0/account/balance"
 
        payload={}
        headers = {
-         'Ocp-Apim-Subscription-Key': 'Your MTN MOMO SUBSCRIPTION KEY',
-         'Authorization':  "Bearer "+str(momotoken()["access_token"]),
-           'X-Target-Environment': 'sandbox',
+         'Ocp-Apim-Subscription-Key': PayClass.collections_subkey,
+         'Authorization':  "Bearer "+str(PayClass.momotoken()["access_token"]),
+           'X-Target-Environment': PayClass.environment_mode,
        }
 
        response = requests.request("GET", url, headers=headers, data=payload)
@@ -102,13 +160,13 @@ class PayClass():
     
     #Check Disubursement balance
     def momobalancedisbursement():
-       url = "https://sandbox.momodeveloper.mtn.com/disbursement/v1_0/account/balance"
+       url = ""+str(PayClass.accurl)+"/disbursement/v1_0/account/balance"
 
        payload={}
        headers = {
-         'Ocp-Apim-Subscription-Key': 'Your MTN MOMO DISBURSEMENT SUBSCRIPTION KEY',
-         'Authorization':  "Bearer "+str(momotokendisbursement()["access_token"]),
-           'X-Target-Environment': 'sandbox',
+         'Ocp-Apim-Subscription-Key': PayClass.momobalancedisbursement,
+         'Authorization':  "Bearer "+str(PayClass.momotokendisbursement()["access_token"]),
+           'X-Target-Environment': PayClass.environment_mode,
        }
 
        response = requests.request("GET", url, headers=headers, data=payload)
@@ -122,7 +180,7 @@ class PayClass():
     def withdrawmtnmomo(amount, currency, txt_ref, phone_number, payermessage):
         #UUID V4 generator
         uuidgen = str(uuid.uuid4())
-        url = "https://sandbox.momodeveloper.mtn.com/disbursement/v1_0/transfer"
+        url = ""+str(PayClass.accurl)+"/disbursement/v1_0/transfer"
 
         payload = json.dumps({
             "amount": amount,
@@ -139,10 +197,10 @@ class PayClass():
   
         headers = {
   'X-Reference-Id': uuidgen,
-  'X-Target-Environment': 'sandbox',
-  'Ocp-Apim-Subscription-Key': 'Your MTN MOMO DISBURSEMENT SUBSCRIPTION KEY',
+  'X-Target-Environment': PayClass.environment_mode,
+  'Ocp-Apim-Subscription-Key': PayClass.disbursment_subkey,
   'Content-Type': 'application/json',
-  'Authorization': "Bearer "+str(momotokendisbursement()["access_token"])
+  'Authorization': "Bearer "+str(PayClass.momotokendisbursement()["access_token"])
 }
 
         response = requests.request("POST", url, headers=headers, data=payload)
@@ -155,7 +213,7 @@ class PayClass():
     def checkwithdrawstatus(txt_ref):
         #UUID V4 generator
         uuidgen = str(uuid.uuid4())
-        url = "https://sandbox.momodeveloper.mtn.com/disbursement/v1_0/transfer/"+str(txt_ref)+""
+        url = ""+str(PayClass.accurl)+"/disbursement/v1_0/transfer/"+str(txt_ref)+""
 
         payload = json.dumps({
            
@@ -164,10 +222,10 @@ class PayClass():
   
         headers = {
   'X-Reference-Id': uuidgen,
-  'X-Target-Environment': 'sandbox',
-  'Ocp-Apim-Subscription-Key': 'Your MTN MOMO DISBURSEMENT SUBSCRIPTION KEY',
+  'X-Target-Environment': PayClass.environment_mode,
+  'Ocp-Apim-Subscription-Key': PayClass.disbursment_subkey,
   'Content-Type': 'application/json',
-  'Authorization': "Bearer "+str(momotokendisbursement()["access_token"])
+  'Authorization': "Bearer "+str(PayClass.momotokendisbursement()["access_token"])
 }
 
         response = requests.request("GET", url, headers=headers, data=payload)
