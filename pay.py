@@ -11,13 +11,18 @@ from basicauth import encode
 class PayClass():
     #Keys
     #Collections Subscription Key:
-    collections_subkey = "{{Collections_your_subscription_key}}"
+    collections_subkey = "{{Collections_subscription_key}}"
     #Disbursement subscription key
-    disbursment_subkey = "{{Disbursement_your_subscription_key}}"
+    disbursment_subkey = ""
     #Production collections basic authorisation key(Leave it blank if in sandbox mode)
-    basic_authorisation_collections = "Basic {{Your_basic_authorization_key}}"
+    basic_authorisation_collections = ""
     #Production disbursement basic authorisation key(Leave it blank if in sandbox mode)
     basic_authorisation_disbursment = ""
+    
+    #API user and Key(Note: Only use this when in production mode)
+    collections_apiuser = ""
+    api_key_collections = ""
+
     #Application mode
     environment_mode = "sandbox"
     accurl = "https://proxy.momoapi.mtn.com"
@@ -28,41 +33,43 @@ class PayClass():
     if environment_mode == "sandbox":
       collections_apiuser = str(uuid.uuid4())
       
-      #Create API user
-      url = ""+str(accurl)+"/v1_0/apiuser"
+    #Create API user
+    url = ""+str(accurl)+"/v1_0/apiuser"
 
-      payload = json.dumps({
-        "providerCallbackHost": "URL of host ie google.com"
-      })
-      headers = {
-        'X-Reference-Id': collections_apiuser,
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': collections_subkey
-      }
+    payload = json.dumps({
+      "providerCallbackHost": "URL of host ie google.com"
+    })
+    headers = {
+      'X-Reference-Id': collections_apiuser,
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': collections_subkey
+    }
 
-      response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request("POST", url, headers=headers, data=payload)
       
-      #Create API key
-      url = ""+str(accurl)+"/v1_0/apiuser/"+str(collections_apiuser)+"/apikey"
+    #Create API key
+    url = ""+str(accurl)+"/v1_0/apiuser/"+str(collections_apiuser)+"/apikey"
 
-      payload={}
-      headers = {
-        'Ocp-Apim-Subscription-Key': collections_subkey
-      }
+    payload={}
+    headers = {
+      'Ocp-Apim-Subscription-Key': collections_subkey
+    }
 
-      response = requests.request("POST", url, headers=headers, data=payload)
-      print("The response is: \n"+str(response))
-      response = response.json()
+    response = requests.request("POST", url, headers=headers, data=payload)
+    #print("The response is: \n"+str(response))
+    response = response.json()
+    #Auto generate when in test mode
+    if environment_mode == "sandbox":
       api_key_collections = str(response["apiKey"])
 
-      #Create basic key for Collections
-      username, password = collections_apiuser, api_key_collections
-      basic_authorisation_collections = encoded_str = str(encode(username, password))
-      print(basic_authorisation_collections)
+    #Create basic key for Collections
+    username, password = collections_apiuser, api_key_collections
+    basic_authorisation_collections = encoded_str = str(encode(username, password))
+    #print(basic_authorisation_collections)
 
-      #API User
-      print("Api user:"+collections_apiuser+"\n")
-      print("Api Key:"+api_key_collections)
+    #API User
+    #print("Api user:"+collections_apiuser+"\n")
+    #print("Api Key:"+api_key_collections)
 
 
     #Momo token generation
