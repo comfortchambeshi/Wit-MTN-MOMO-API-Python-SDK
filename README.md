@@ -1,5 +1,7 @@
 Welcome to Wit MTN MOMO API Python SDK, here is the full tutorial on how to use it:
 
+# Dependancies
+- pip install basicauth
 # Requirements for production users 
   - MTN MOMO developer accountT(https://momodeveloper.mtn.com/signin?ReturnUrl=%2F)
   - MTN MOMO developer collections and disbursement api user and key
