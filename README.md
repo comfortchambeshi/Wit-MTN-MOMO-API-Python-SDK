@@ -6,7 +6,7 @@ Welcome to Wit MTN MOMO API Python SDK, here is the full tutorial on how to use 
   - MTN MOMO developer subscription key for collecions and subscriptions
   
 # Requirements For Sandbox/Testing users
-  - Basic authorizatio, which is generated with API user and API key
+  - Collections and disbursment subscription keys
   
 
 # What to do before you start using this:
