@@ -1,15 +1,22 @@
 Welcome to Wit MTN MOMO API Python SDK, here is the full tutorial on how to use it:
-Production url https://proxy.momoapi.mtn.com
-Sandbox URL https://sandbox.momodeveloper.mtn.com
 
 # Requirements for production users 
-  - MTN MOMO DEVELOPER ACCOUNT(https://momodeveloper.mtn.com/signin?ReturnUrl=%2F)
-  - MTN MOMO COLLECTIONS SUBSCRIPTION KEY
-  - MTN MOMO DEVELOPER DISBURSEMENT SUBSCRIPTION KEY
+  - MTN MOMO developer accountT(https://momodeveloper.mtn.com/signin?ReturnUrl=%2F)
+  - MTN MOMO developer collections and disbursement api user and key
+  - MTN MOMO developer subscription key for collecions and subscriptions
+  
 # Requirements For Sandbox/Testing users
   - Basic authorizatio, which is generated with API user and API key
   
 
+# What to do before you start using this:
+  Open pay.py and update these values:
+  1) Update collections_subkey with your collections subscription key
+  ```
+  #Collections Subscription Key:
+  collections_subkey = "{{Collections_subscription_key}}"
+  ```
+  2) Update disbursment_subkey with your disbursement subscription key
 
 ## Calling request to pay 
 ```
