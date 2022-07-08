@@ -17,7 +17,25 @@ Welcome to Wit MTN MOMO API Python SDK, here is the full tutorial on how to use 
   collections_subkey = "{{Collections_subscription_key}}"
   ```
   2) Update disbursment_subkey with your disbursement subscription key
-
+  ```
+  #Collections Subscription Key:
+  disbursment_subkey = ""
+  ```
+  3) Only for users in production
+    Update collections api user  
+    ```
+    collections_apiuser = ""
+    ```
+    Update api key with your collections key
+    ```
+    api_key_collections = ""
+    ```
+  4) Set application environment
+     By default the environment is sandbox
+     ```
+     #Application mode
+     environment_mode = "sandbox"
+     ```
 ## Calling request to pay 
 ```
 from pay import PayClass
