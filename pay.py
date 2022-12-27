@@ -1,4 +1,3 @@
-
 import requests
 import json
 import uuid
@@ -6,13 +5,17 @@ from basicauth import encode
 
 
 class PayClass():
-    # Keys
+    # ================================================================================ Variables & Keys
+
     # Collections Subscription Key:
     collections_subkey = "d350d3a623d1447088942fb03b1b60b2"
+
     # Disbursement subscription key
     disbursements_subkey = "73b64d8af5ec40129d6ca982fb01cf85"
+
     # Production collections basic authorisation key(Leave it blank if in sandbox mode)
     basic_authorisation_collections = ""
+
     # Production disbursement basic authorisation key(Leave it blank if in sandbox mode)
     basic_authorisation_disbursments = ""
 
@@ -35,9 +38,10 @@ class PayClass():
         collections_apiuser = str(uuid.uuid4())
         disbursements_apiuser = str(uuid.uuid4())
 
-     # ================================================================================
+    # ================================================================================ Collections Code
 
-    # Create API user for collections
+    # ============= Create API user
+
     url = ""+str(accurl)+"/v1_0/apiuser"
 
     payload = json.dumps({
@@ -52,7 +56,8 @@ class PayClass():
 
     response = requests.request("POST", url, headers=headers, data=payload)
 
-    # Create API key for collections
+    # ============= Create API key
+
     url = ""+str(accurl)+"/v1_0/apiuser/"+str(collections_apiuser)+"/apikey"
 
     payload = {}
@@ -80,55 +85,7 @@ class PayClass():
     #print("Api user:"+collections_apiuser+"\n")
     #print("Api Key:"+api_key_collections)
 
-    # ================================================================================
-
-    # Create API user for disbursements
-    url = ""+str(accurl)+"/v1_0/apiuser"
-
-    payload = json.dumps({
-        "providerCallbackHost": "URL of host ie google.com"
-    })
-
-    headers = {
-        'X-Reference-Id': disbursements_apiuser,
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': disbursements_subkey
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    # Create API key for disbursements
-    url = ""+str(accurl)+"/v1_0/apiuser/"+str(disbursements_apiuser)+"/apikey"
-
-    payload = {}
-    headers = {
-        'Ocp-Apim-Subscription-Key': disbursements_subkey
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    #print("The response is: \n"+str(response))
-    response = response.json()
-
-    # Auto generate when in test mode
-    if environment_mode == "sandbox":
-        api_key_disbursements = str(response["apiKey"])
-
-    # Create basic key for Collections
-    username, password = disbursements_apiuser, api_key_disbursements
-
-    basic_authorisation_disbursments = encoded_str = str(
-        encode(username, password))
-
-#     print(basic_authorisation_disbursments)
-
-    # API User
-    #print("Api user:"+collections_apiuser+"\n")
-#     print("Api Key:" + api_key_disbursements)
-
-    # ================================================================================
-
-    # Momo token generation
+    # ============= Action Functions for collections
 
     def momotoken():
         url = ""+str(PayClass.accurl)+"/collection/token/"
@@ -137,22 +94,6 @@ class PayClass():
         headers = {
             'Ocp-Apim-Subscription-Key': PayClass.collections_subkey,
             'Authorization': str(PayClass.basic_authorisation_collections)
-        }
-
-        response = requests.request("POST", url, headers=headers, data=payload)
-
-        authorization_token = response.json()
-
-        return authorization_token
-
-    # Momo disbursement token generation
-    def momotokendisbursement():
-        url = ""+str(PayClass.accurl)+"/disbursement/token/"
-
-        payload = {}
-        headers = {
-            'Ocp-Apim-Subscription-Key': PayClass.disbursements_subkey,
-            'Authorization': str(PayClass.basic_authorisation_disbursments)
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
@@ -225,13 +166,79 @@ class PayClass():
 
         return json_respon
 
+    # ================================================================================ Disbursements Code
+
+    # ============= Create API user
+
+    url = ""+str(accurl)+"/v1_0/apiuser"
+
+    payload = json.dumps({
+        "providerCallbackHost": "URL of host ie google.com"
+    })
+
+    headers = {
+        'X-Reference-Id': disbursements_apiuser,
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': disbursements_subkey
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    # ============= Create API key
+
+    url = ""+str(accurl)+"/v1_0/apiuser/"+str(disbursements_apiuser)+"/apikey"
+
+    payload = {}
+    headers = {
+        'Ocp-Apim-Subscription-Key': disbursements_subkey
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    #print("The response is: \n"+str(response))
+    response = response.json()
+
+    # Auto generate when in test mode
+    if environment_mode == "sandbox":
+        api_key_disbursements = str(response["apiKey"])
+
+    # Create basic key for Collections
+    username, password = disbursements_apiuser, api_key_disbursements
+
+    basic_authorisation_disbursments = encoded_str = str(
+        encode(username, password))
+
+    # print(basic_authorisation_disbursments)
+
+    # API User
+    #print("Api user:"+collections_apiuser+"\n")
+    # print("Api Key:" + api_key_disbursements)
+
+    # ============= Action Functions for disbursements
+
+    # Momo disbursement token generation
+    def momotokendisbursement():
+        url = ""+str(PayClass.accurl)+"/disbursement/token/"
+
+        payload = {}
+        headers = {
+            'Ocp-Apim-Subscription-Key': PayClass.disbursements_subkey,
+            'Authorization': str(PayClass.basic_authorisation_disbursments)
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        authorization_token = response.json()
+
+        return authorization_token
+
     # Check Disubursement balance
     def momobalancedisbursement():
         url = ""+str(PayClass.accurl)+"/disbursement/v1_0/account/balance"
 
         payload = {}
         headers = {
-            'Ocp-Apim-Subscription-Key': PayClass.momobalancedisbursement,
+            'Ocp-Apim-Subscription-Key': PayClass.disbursements_subkey,
             'Authorization':  "Bearer "+str(PayClass.momotokendisbursement()["access_token"]),
             'X-Target-Environment': PayClass.environment_mode,
         }
@@ -242,8 +249,7 @@ class PayClass():
 
         return json_respon
 
-   # Withdraw money Disbursement
-
+    # Withdraw money Disbursement
     def withdrawmtnmomo(amount, currency, txt_ref, phone_number, payermessage):
         # UUID V4 generator
         uuidgen = str(uuid.uuid4())
@@ -275,28 +281,35 @@ class PayClass():
 
         return context
 
-# Check transfer status disbursment
+    # Check transfer status disbursment
     def checkwithdrawstatus(txt_ref):
+
         # UUID V4 generator
         uuidgen = str(uuid.uuid4())
-        url = ""+str(PayClass.accurl) + \
-            "/disbursement/v1_0/transfer/"+str(txt_ref)+""
 
-        payload = json.dumps({
+        url = str(PayClass.accurl) + \
+            "/disbursement/v1_0/transfer/" + str(txt_ref)
 
-        })
+        payload = {}
 
         headers = {
             'X-Reference-Id': uuidgen,
             'X-Target-Environment': PayClass.environment_mode,
             'Ocp-Apim-Subscription-Key': PayClass.disbursements_subkey,
             'Content-Type': 'application/json',
-            'Authorization': "Bearer "+str(PayClass.momotokendisbursement()["access_token"])
+            'Authorization': "Bearer " + str(PayClass.momotokendisbursement()["access_token"])
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
+
         returneddata = response.json()
-        context = {"response": response.status_code,
-                   "ref": txt_ref, "data": returneddata}
+
+        #  print(returneddata)
+
+        context = {
+            "response": response.status_code,
+            "ref": txt_ref,
+            "data": returneddata
+        }
 
         return context
